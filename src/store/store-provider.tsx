@@ -1,18 +1,15 @@
 'use client';
 
-import { useRef, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Provider } from 'react-redux';
-import { makeStore, type AppStore } from './index';
+import { makeStore } from './index';
 
 /**
- * Provider do Redux. Mantém o store em um ref para instanciá-lo uma única vez
- * por árvore de render (padrão App Router).
+ * Provider do Redux. Cria o store uma única vez por árvore de render (padrão
+ * App Router) via inicializador do useState.
  */
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const storeRef = useRef<AppStore | null>(null);
-  if (!storeRef.current) {
-    storeRef.current = makeStore();
-  }
+  const [store] = useState(makeStore);
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return <Provider store={store}>{children}</Provider>;
 }
