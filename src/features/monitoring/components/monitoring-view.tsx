@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import { PageHeader } from '@/components/layout/page-header';
+import { Card } from '@/components/card';
 import { DataTable, type Column } from '@/components/data-table';
 import { StatusBadge } from '@/components/status-badge';
 import { ORDER_STATUSES } from '@/domain/order-status';
@@ -93,7 +94,7 @@ export function MonitoringView() {
       <MonitoringFilters />
 
       <div className="mb-6 grid gap-4 lg:grid-cols-3">
-        <div className="rounded-lg border bg-card p-5">
+        <Card>
           <p className="text-xs text-muted-foreground">Total (filtrado)</p>
           <p className="mt-1 font-display text-3xl font-semibold tabular-nums">
             {aggregateSet.length}
@@ -101,13 +102,13 @@ export function MonitoringView() {
           <p className="mt-1 text-xs text-muted-foreground">
             de {orders.length} no total
           </p>
-        </div>
-        <div className="rounded-lg border bg-card p-5 lg:col-span-2">
+        </Card>
+        <Card className="lg:col-span-2">
           <p className="mb-4 text-xs text-muted-foreground">
             Distribuição por status
           </p>
           <StatusDistribution counts={counts} />
-        </div>
+        </Card>
       </div>
 
       <DataTable

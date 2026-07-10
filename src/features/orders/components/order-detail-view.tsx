@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/layout/page-header';
+import { Card } from '@/components/card';
 import { StatusBadge } from '@/components/status-badge';
 import { nextStatus, ORDER_STATUS_LABELS } from '@/domain/order-status';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -105,7 +106,7 @@ export function OrderDetailView({ id }: { id: string }) {
       />
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <section className="rounded-lg border bg-card p-5 lg:col-span-2">
+        <Card as="section" className="lg:col-span-2">
           <dl className="grid grid-cols-2 gap-4">
             <Field label="Cliente" value={clientName} />
             <Field label="Transporte" value={transportName} />
@@ -149,9 +150,9 @@ export function OrderDetailView({ id }: { id: string }) {
               </li>
             ))}
           </ul>
-        </section>
+        </Card>
 
-        <aside className="rounded-lg border bg-card p-5">
+        <Card as="aside">
           <h2 className="mb-3 font-display text-sm font-semibold">
             Fluxo operacional
           </h2>
@@ -186,7 +187,7 @@ export function OrderDetailView({ id }: { id: string }) {
             Auditoria
           </h2>
           <OrderAuditSection orderId={order.id} />
-        </aside>
+        </Card>
       </div>
     </>
   );
