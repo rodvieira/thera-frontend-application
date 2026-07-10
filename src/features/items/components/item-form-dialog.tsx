@@ -14,43 +14,31 @@ import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/form/text-field';
 import { ApiError } from '@/lib/api-client';
 import { useNotify } from '@/store/use-notify';
-import type { TransportType } from '@/domain/types';
-import { transportTypeSchema, type TransportTypeFormValues } from '../schema';
-import { useCreateTransportType, useUpdateTransportType } from '../hooks';
+import { itemSchema, type ItemFormValues } from '../schema';
+import { useCreateItem } from '../hooks';
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  editing: TransportType | null;
 }
 
-export function TransportTypeFormDialog({
-  open,
-  onOpenChange,
-  editing,
-}: Props) {
-  const create = useCreateTransportType();
-  const update = useUpdateTransportType();
+export function ItemFormDialog({ open, onOpenChange }: Props) {
+  const create = useCreateItem();
   const notify = useNotify();
 
-  const form = useForm<TransportTypeFormValues>({
-    resolver: zodResolver(transportTypeSchema),
-    defaultValues: { name: '' },
+  const form = useForm<ItemFormValues>({
+    resolver: zodResolver(itemSchema),
+    defaultValues: { sku: '', name: '', unit: 'UN' },
   });
 
   useEffect(() => {
-    if (open) form.reset({ name: editing?.name ?? '' });
-  }, [open, editing, form]);
+    if (open) form.reset({ sku: '', name: '', unit: 'UN' });
+  }, [open, form]);
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
-      if (editing) {
-        await update.mutateAsync({ id: editing.id, input: values });
-        notify.success('Tipo de transporte atualizado');
-      } else {
-        await create.mutateAsync(values);
-        notify.success('Tipo de transporte criado');
-      }
+      await create.mutateAsync(values);
+      notify.success('Item criado');
       onOpenChange(false);
     } catch (error) {
       notify.error(
@@ -59,22 +47,28 @@ export function TransportTypeFormDialog({
     }
   });
 
-  const pending = create.isPending || update.isPending;
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {editing ? 'Editar tipo de transporte' : 'Novo tipo de transporte'}
-          </DialogTitle>
+          <DialogTitle>Novo item</DialogTitle>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">
           <TextField
-            label="Nome"
+            label="SKU"
             autoFocus
+            error={form.formState.errors.sku?.message}
+            {...form.register('sku')}
+          />
+          <TextField
+            label="Nome"
             error={form.formState.errors.name?.message}
             {...form.register('name')}
+          />
+          <TextField
+            label="Unidade"
+            error={form.formState.errors.unit?.message}
+            {...form.register('unit')}
           />
           <DialogFooter>
             <Button
@@ -84,8 +78,8 @@ export function TransportTypeFormDialog({
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={pending}>
-              {pending ? 'Salvando…' : 'Salvar'}
+            <Button type="submit" disabled={create.isPending}>
+              {create.isPending ? 'Salvando…' : 'Salvar'}
             </Button>
           </DialogFooter>
         </form>
