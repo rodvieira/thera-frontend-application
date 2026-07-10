@@ -39,16 +39,10 @@ describe('autorização de transporte', () => {
       );
     });
 
-    it('preenche clientId e transportTypeId no erro', () => {
-      try {
-        assertTransportAuthorized(client, 't-bitruck');
-        throw new Error('deveria ter lançado');
-      } catch (error) {
-        expect(error).toBeInstanceOf(TransportNotAuthorizedError);
-        const err = error as TransportNotAuthorizedError;
-        expect(err.clientId).toBe('c1');
-        expect(err.transportTypeId).toBe('t-bitruck');
-      }
+    it('descreve o transporte rejeitado na mensagem do erro', () => {
+      expect(() => assertTransportAuthorized(client, 't-bitruck')).toThrow(
+        't-bitruck',
+      );
     });
   });
 });

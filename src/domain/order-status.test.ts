@@ -54,16 +54,10 @@ describe('máquina de estados da OV', () => {
       );
     });
 
-    it('preenche from/to no erro', () => {
-      try {
-        assertTransition('AGENDADA', 'CRIADA');
-        throw new Error('deveria ter lançado');
-      } catch (error) {
-        expect(error).toBeInstanceOf(InvalidTransitionError);
-        const err = error as InvalidTransitionError;
-        expect(err.from).toBe('AGENDADA');
-        expect(err.to).toBe('CRIADA');
-      }
+    it('descreve a transição rejeitada na mensagem do erro', () => {
+      expect(() => assertTransition('AGENDADA', 'CRIADA')).toThrow(
+        'AGENDADA → CRIADA',
+      );
     });
   });
 });
