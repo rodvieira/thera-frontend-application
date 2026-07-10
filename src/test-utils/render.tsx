@@ -13,7 +13,8 @@ export function renderWithProviders(ui: ReactElement) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  const store = makeStore();
+  // A store usa o mesmo queryClient (para a saga invalidar o cache do provider).
+  const store = makeStore(queryClient);
 
   function Wrapper({ children }: { children: ReactNode }) {
     return (

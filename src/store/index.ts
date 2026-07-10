@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
+import type { QueryClient } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/query-client';
 import notificationsReducer from './slices/notifications';
 import ordersReducer from '@/features/orders/store/orders-slice';
@@ -10,10 +11,11 @@ import { rootSaga } from './root-saga';
  * compartilhar estado entre requests no SSR) com o saga middleware ativo. O
  * `queryClient` é injetado no contexto do saga para permitir invalidar queries
  * do React Query após efeitos orquestrados (ex.: transição de status da OV).
+ * Pode ser injetado (testes) para compartilhar o mesmo cache do provider.
  */
-export function makeStore() {
+export function makeStore(queryClient: QueryClient = getQueryClient()) {
   const sagaMiddleware = createSagaMiddleware({
-    context: { queryClient: getQueryClient() },
+    context: { queryClient },
   });
 
   const store = configureStore({
