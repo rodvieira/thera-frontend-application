@@ -1,12 +1,16 @@
 import type { HttpHandler } from 'msw';
 import { http, HttpResponse } from 'msw';
+import { transportTypeHandlers } from './transport-types';
+import { itemHandlers } from './items';
+import { clientHandlers } from './clients';
 
 /**
- * Handlers do MSW. Cada feature adiciona seus handlers de recurso aqui
- * (clientes, tipos de transporte, itens, ordens de venda, etc.).
- *
- * Por ora expõe apenas um health check, usado para validar a interceptação.
+ * Handlers do MSW. Cada recurso contribui com seus handlers de CRUD, lastreados
+ * pelo store em memória (`src/mocks/data/db.ts`).
  */
 export const handlers: HttpHandler[] = [
   http.get('/api/health', () => HttpResponse.json({ status: 'ok' })),
+  ...transportTypeHandlers,
+  ...itemHandlers,
+  ...clientHandlers,
 ];
