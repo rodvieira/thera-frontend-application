@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated / Node-CJS files not meant for the app lint rules:
+    "public/mockServiceWorker.js",
+    "jest.polyfills.js",
+    "coverage/**",
   ]),
 ]);
 
