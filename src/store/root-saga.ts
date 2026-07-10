@@ -1,9 +1,9 @@
 import { all } from 'redux-saga/effects';
+import { ordersSaga } from '@/features/orders/store/orders-saga';
 
 /**
- * Root saga da aplicação. As sagas de cada feature (ex.: transição de status da
- * OV, agendamento) serão registradas aqui conforme forem implementadas.
+ * Root saga da aplicação. Combina as sagas de cada feature.
  */
 export function* rootSaga() {
-  yield all([]);
+  yield all([ordersSaga()]);
 }
