@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Sidebar } from './sidebar';
+import { Toaster } from '@/components/notifications/toaster';
 
 /**
  * Shell da aplicação: rail de navegação + área de conteúdo com cabeçalho.
@@ -8,6 +9,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen w-full">
       <Sidebar />
+      <Toaster />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 items-center justify-between border-b bg-background px-6">
           <span className="font-display text-sm font-semibold tracking-tight md:hidden">
