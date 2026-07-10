@@ -4,6 +4,7 @@ import {
   Activity,
   CalendarClock,
   Database,
+  ScrollText,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -19,4 +20,5 @@ export const navItems: NavItem[] = [
   { href: '/monitoramento', label: 'Monitoramento', icon: Activity },
   { href: '/agendamento', label: 'Agendamento', icon: CalendarClock },
   { href: '/cadastros', label: 'Cadastros', icon: Database },
+  { href: '/auditoria', label: 'Auditoria', icon: ScrollText },
 ];

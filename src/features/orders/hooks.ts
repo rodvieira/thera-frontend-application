@@ -30,6 +30,9 @@ export function useCreateSalesOrder() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: CreateSalesOrderInput) => ordersApi.create(input),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: orderKeys.all }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: orderKeys.all });
+      queryClient.invalidateQueries({ queryKey: ['audit-events'] });
+    },
   });
 }

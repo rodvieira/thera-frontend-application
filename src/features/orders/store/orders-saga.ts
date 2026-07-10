@@ -34,6 +34,9 @@ function* handleStatusTransition(
     yield call([queryClient, queryClient.invalidateQueries], {
       queryKey: orderKeys.all,
     });
+    yield call([queryClient, queryClient.invalidateQueries], {
+      queryKey: ['audit-events'],
+    });
 
     yield put(
       notify({

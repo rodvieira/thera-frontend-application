@@ -4,6 +4,7 @@ import { transportTypeHandlers } from './transport-types';
 import { itemHandlers } from './items';
 import { clientHandlers } from './clients';
 import { salesOrderHandlers } from './sales-orders';
+import { auditHandlers } from './audit';
 
 /**
  * Handlers do MSW. Cada recurso contribui com seus handlers de CRUD, lastreados
@@ -15,4 +16,5 @@ export const handlers: HttpHandler[] = [
   ...itemHandlers,
   ...clientHandlers,
   ...salesOrderHandlers,
+  ...auditHandlers,
 ];

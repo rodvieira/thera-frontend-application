@@ -11,6 +11,8 @@ import { useClients } from '@/features/clients/hooks';
 import { useTransportTypes } from '@/features/transport-types/hooks';
 import { useItems } from '@/features/items/hooks';
 import { DELIVERY_WINDOW_LABELS } from '@/features/scheduling/schema';
+import { useAuditEvents } from '@/features/audit/hooks';
+import { AuditTrail } from '@/features/audit/components/audit-trail';
 import { useSalesOrder } from '../hooks';
 import {
   statusTransitionRequested,
@@ -23,6 +25,17 @@ function Field({ label, value }: { label: string; value: string }) {
       <dt className="text-xs text-muted-foreground">{label}</dt>
       <dd className="mt-0.5 text-sm font-medium">{value}</dd>
     </div>
+  );
+}
+
+function OrderAuditSection({ orderId }: { orderId: string }) {
+  const { data: events = [], isLoading } = useAuditEvents(orderId);
+  return (
+    <AuditTrail
+      events={events}
+      isLoading={isLoading}
+      emptyMessage="Sem eventos registrados."
+    />
   );
 }
 
@@ -168,6 +181,11 @@ export function OrderDetailView({ id }: { id: string }) {
               );
             })}
           </ol>
+
+          <h2 className="mt-6 mb-3 font-display text-sm font-semibold">
+            Auditoria
+          </h2>
+          <OrderAuditSection orderId={order.id} />
         </aside>
       </div>
     </>

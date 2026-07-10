@@ -9,7 +9,11 @@ import type {
 } from '@/domain/types';
 import { isTransportAuthorized } from '@/domain/transport-authorization';
 import { canTransition } from '@/domain/order-status';
-import { createAuditEvent, type AuditAction } from '@/domain/audit';
+import {
+  createAuditEvent,
+  type AuditAction,
+  type AuditEvent,
+} from '@/domain/audit';
 import { db } from './db';
 
 /**
@@ -276,4 +280,17 @@ export function confirmSchedule(id: string): SalesOrder {
     recordAudit('STATUS_CHANGED', id, previous, 'AGENDADA');
   }
   return order;
+}
+
+// --- Auditoria ---
+
+export interface AuditFilters {
+  entityId?: string;
+}
+
+export function listAuditEvents(filters: AuditFilters = {}): AuditEvent[] {
+  return db.auditEvents
+    .filter((event) => !filters.entityId || event.entityId === filters.entityId)
+    .slice()
+    .sort((a, b) => b.timestamp.localeCompare(a.timestamp));
 }
