@@ -4,6 +4,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/query-client';
 import notificationsReducer from './slices/notifications';
 import ordersReducer from '@/features/orders/store/orders-slice';
+import monitoringReducer from '@/features/monitoring/store/monitoring-slice';
 import { rootSaga } from './root-saga';
 
 /**
@@ -22,6 +23,7 @@ export function makeStore(queryClient: QueryClient = getQueryClient()) {
     reducer: {
       notifications: notificationsReducer,
       orders: ordersReducer,
+      monitoring: monitoringReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(sagaMiddleware),
