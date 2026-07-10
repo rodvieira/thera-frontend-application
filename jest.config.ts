@@ -9,6 +9,9 @@ const createJestConfig = nextJest({
 const config: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
+  // Necessário para o MSW resolver os exports corretos sob jsdom.
+  testEnvironmentOptions: { customExportConditions: [''] },
+  setupFiles: ['<rootDir>/jest.polyfills.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -21,4 +24,32 @@ const config: Config = {
   ],
 };
 
-export default createJestConfig(config);
+// next/jest prepends its próprio transformIgnorePatterns e a lógica é OR: se
+// qualquer padrão casar, o arquivo NÃO é transformado. Por isso não basta
+// adicionar — precisamos substituir o array depois do merge para permitir a
+// transformação do MSW v2 e suas dependências ESM (rettime, etc.).
+const esmPackages = [
+  'geist',
+  'next',
+  'msw',
+  '@mswjs',
+  'rettime',
+  'until-async',
+  'outvariant',
+  '@open-draft',
+  'strict-event-emitter',
+  'headers-polyfill',
+  '@bundled-es-modules',
+  'tough-cookie',
+];
+
+export default async function jestConfig() {
+  const nextConfig = await createJestConfig(config)();
+  return {
+    ...nextConfig,
+    transformIgnorePatterns: [
+      `/node_modules/(?!(${esmPackages.join('|')})/)`,
+      String.raw`^.+\.module\.(css|sass|scss)$`,
+    ],
+  };
+}
