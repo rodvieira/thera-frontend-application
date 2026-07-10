@@ -1,0 +1,41 @@
+schema: spec-driven
+
+context: |
+  Projeto: OVGS — Sistema de Gestão de Ordens de Venda (frontend).
+  Desafio técnico para vaga de Frontend Sênior. Apenas frontend; a API é
+  mockada com MSW (Mock Service Worker). O backend real está fora de escopo.
+
+  Stack:
+    - Next.js (App Router) + TypeScript
+    - Tailwind CSS v4 + shadcn/ui (Radix) para o design system
+    - React Query (@tanstack/react-query) para server-state / integração REST
+    - Redux Toolkit + Redux Saga para estado global de UI e orquestração de
+      side-effects (transições de status, agendamento, auditoria)
+    - React Hook Form + Zod para formulários e validação
+    - MSW para mock da API REST
+    - Jest + React Testing Library para testes
+
+  Convenções:
+    - Conventional Commits (feat, fix, test, chore, docs, ci, refactor)
+    - Um commit pequeno por task
+    - Arquitetura feature-based: src/domain (regras puras), src/features
+      (módulos de domínio), src/shared (UI/lib/store), src/mocks (MSW)
+    - Regras de negócio puras vivem em src/domain e são cobertas por testes
+    - Sem duplicação de código; sem testes vazios/sem valor
+
+  Domínio (OV = Ordem de Venda):
+    - Fluxo de status: CRIADA -> PLANEJADA -> AGENDADA -> EM_TRANSPORTE -> ENTREGUE
+      (somente transições sequenciais válidas são permitidas)
+    - Uma OV: 1 cliente, exatamente 1 tipo de transporte, >= 1 item, status válido
+    - Cliente possui lista de tipos de transporte autorizados; só é possível criar
+      OV se o transporte estiver autorizado para o cliente
+    - Auditoria registra: data/hora, tipo de ação, entidade afetada, estado
+      anterior e posterior (quando aplicável)
+
+rules:
+  proposal:
+    - Escreva em português
+    - Inclua sempre uma seção de "Não-objetivos" (Non-goals)
+  tasks:
+    - Cada task deve corresponder a um commit pequeno e independente
+    - Use prefixos de Conventional Commits na descrição de cada task
