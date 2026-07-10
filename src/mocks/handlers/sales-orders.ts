@@ -4,10 +4,12 @@ import {
   getSalesOrder,
   createSalesOrder,
   updateSalesOrderStatus,
+  scheduleDelivery,
+  confirmSchedule,
   type CreateSalesOrderInput,
 } from '../data/repository';
 import { respond } from './respond';
-import type { OrderStatus } from '@/domain/types';
+import type { OrderStatus, DeliveryWindow } from '@/domain/types';
 
 export const salesOrderHandlers = [
   http.get('/api/sales-orders', ({ request }) => {
@@ -37,4 +39,16 @@ export const salesOrderHandlers = [
       updateSalesOrderStatus(params.id as string, body.status),
     );
   }),
+
+  http.patch('/api/sales-orders/:id/schedule', async ({ params, request }) => {
+    const body = (await request.json()) as {
+      date: string;
+      window: DeliveryWindow;
+    };
+    return respond(() => scheduleDelivery(params.id as string, body));
+  }),
+
+  http.post('/api/sales-orders/:id/schedule/confirm', ({ params }) =>
+    respond(() => confirmSchedule(params.id as string)),
+  ),
 ];

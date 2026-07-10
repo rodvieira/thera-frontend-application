@@ -5,6 +5,7 @@ import type {
   SalesOrderItem,
   TransportType,
   OrderStatus,
+  DeliveryWindow,
 } from '@/domain/types';
 import { isTransportAuthorized } from '@/domain/transport-authorization';
 import { canTransition } from '@/domain/order-status';
@@ -232,5 +233,47 @@ export function updateSalesOrderStatus(
   order.status = nextStatus;
   order.updatedAt = new Date().toISOString();
   recordAudit('STATUS_CHANGED', order.id, previous, nextStatus);
+  return order;
+}
+
+// --- Agendamento ---
+
+export function scheduleDelivery(
+  id: string,
+  input: { date: string; window: DeliveryWindow },
+): SalesOrder {
+  const order = getSalesOrder(id);
+  if (!input.date) throw new HttpError(400, 'Data é obrigatória');
+
+  const previous = order.schedule
+    ? `${order.schedule.date} ${order.schedule.window}`
+    : null;
+  order.schedule = { date: input.date, window: input.window, confirmed: false };
+  order.updatedAt = new Date().toISOString();
+  recordAudit(
+    'SCHEDULE_CHANGED',
+    id,
+    previous,
+    `${input.date} ${input.window}`,
+  );
+  return order;
+}
+
+export function confirmSchedule(id: string): SalesOrder {
+  const order = getSalesOrder(id);
+  if (!order.schedule) {
+    throw new HttpError(400, 'Defina data e janela antes de confirmar');
+  }
+
+  order.schedule.confirmed = true;
+  order.updatedAt = new Date().toISOString();
+  recordAudit('SCHEDULE_CHANGED', id, 'não confirmado', 'confirmado');
+
+  // Confirmar o agendamento leva uma OV planejada para AGENDADA.
+  if (canTransition(order.status, 'AGENDADA')) {
+    const previous = order.status;
+    order.status = 'AGENDADA';
+    recordAudit('STATUS_CHANGED', id, previous, 'AGENDADA');
+  }
   return order;
 }
