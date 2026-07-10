@@ -61,14 +61,10 @@
     "jest-environment-jsdom": "^30.4.1",
     "lint-staged": "^16.4.0",
     "msw": "^2.15.0",
+    "playwright": "^1.61.1",
     "prettier": "^3.9.5",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
-    ]
   }
 }
