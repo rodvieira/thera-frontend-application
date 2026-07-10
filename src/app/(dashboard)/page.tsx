@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { ClipboardList, Activity, CalendarClock, Database } from 'lucide-react';
 import { PageHeader } from '@/components/layout/page-header';
+import { NavCard, type NavCardProps } from '@/components/nav-card';
 
-const areas = [
+const areas: NavCardProps[] = [
   {
     href: '/ordens',
     label: 'Ordens de Venda',
@@ -38,28 +38,9 @@ export default function OverviewPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {areas.map((area) => {
-          const Icon = area.icon;
-          return (
-            <Link
-              key={area.href}
-              href={area.href}
-              className="group rounded-lg border bg-card p-5 transition-colors hover:border-foreground/20 hover:bg-accent"
-            >
-              <div className="flex items-center gap-3">
-                <span className="flex size-9 items-center justify-center rounded-md bg-muted text-foreground">
-                  <Icon className="size-4.5" aria-hidden />
-                </span>
-                <h2 className="font-display text-base font-semibold tracking-tight">
-                  {area.label}
-                </h2>
-              </div>
-              <p className="mt-3 text-sm text-muted-foreground">
-                {area.description}
-              </p>
-            </Link>
-          );
-        })}
+        {areas.map((area) => (
+          <NavCard key={area.href} {...area} />
+        ))}
       </div>
     </>
   );

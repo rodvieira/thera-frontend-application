@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { Users, Truck, Package } from 'lucide-react';
 import { PageHeader } from '@/components/layout/page-header';
+import { NavCard, type NavCardProps } from '@/components/nav-card';
 
-const cadastros = [
+const cadastros: NavCardProps[] = [
   {
     href: '/cadastros/clientes',
     label: 'Clientes',
@@ -31,28 +31,9 @@ export default function CadastrosPage() {
         description="Dados-mestre do sistema: clientes, tipos de transporte e itens."
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cadastros.map((cadastro) => {
-          const Icon = cadastro.icon;
-          return (
-            <Link
-              key={cadastro.href}
-              href={cadastro.href}
-              className="group rounded-lg border bg-card p-5 transition-colors hover:border-foreground/20 hover:bg-accent"
-            >
-              <div className="flex items-center gap-3">
-                <span className="flex size-9 items-center justify-center rounded-md bg-muted text-foreground">
-                  <Icon className="size-4.5" aria-hidden />
-                </span>
-                <h2 className="font-display text-base font-semibold tracking-tight">
-                  {cadastro.label}
-                </h2>
-              </div>
-              <p className="mt-3 text-sm text-muted-foreground">
-                {cadastro.description}
-              </p>
-            </Link>
-          );
-        })}
+        {cadastros.map((cadastro) => (
+          <NavCard key={cadastro.href} {...cadastro} />
+        ))}
       </div>
     </>
   );
