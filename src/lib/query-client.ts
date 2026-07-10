@@ -2,9 +2,6 @@ import { QueryClient } from '@tanstack/react-query';
 
 /**
  * Cria um QueryClient com defaults sensatos para a aplicação.
- *
- * Uma factory (em vez de instância singleton) evita compartilhar cache entre
- * requests no SSR e facilita isolar o client em testes.
  */
 export function makeQueryClient(): QueryClient {
   return new QueryClient({
@@ -16,4 +13,18 @@ export function makeQueryClient(): QueryClient {
       },
     },
   });
+}
+
+let browserClient: QueryClient | undefined;
+
+/**
+ * Retorna o QueryClient da aplicação. No servidor cria uma instância nova a cada
+ * chamada (evita vazamento entre requests); no navegador reusa um singleton, de
+ * modo que o `QueryProvider` e a store (para a ponte com o Redux Saga)
+ * compartilhem o mesmo cache.
+ */
+export function getQueryClient(): QueryClient {
+  if (typeof window === 'undefined') return makeQueryClient();
+  if (!browserClient) browserClient = makeQueryClient();
+  return browserClient;
 }

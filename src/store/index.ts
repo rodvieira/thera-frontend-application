@@ -1,18 +1,25 @@
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
+import { getQueryClient } from '@/lib/query-client';
 import notificationsReducer from './slices/notifications';
+import ordersReducer from '@/features/orders/store/orders-slice';
 import { rootSaga } from './root-saga';
 
 /**
  * Factory do store. Cria uma nova instância por árvore de render (evita
- * compartilhar estado entre requests no SSR) com o saga middleware ativo.
+ * compartilhar estado entre requests no SSR) com o saga middleware ativo. O
+ * `queryClient` é injetado no contexto do saga para permitir invalidar queries
+ * do React Query após efeitos orquestrados (ex.: transição de status da OV).
  */
 export function makeStore() {
-  const sagaMiddleware = createSagaMiddleware();
+  const sagaMiddleware = createSagaMiddleware({
+    context: { queryClient: getQueryClient() },
+  });
 
   const store = configureStore({
     reducer: {
       notifications: notificationsReducer,
+      orders: ordersReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(sagaMiddleware),
