@@ -34,6 +34,11 @@ Object.defineProperties(globalThis, {
   MessageChannel: { value: MessageChannel, writable: true, configurable: true },
 });
 
+if (typeof globalThis.structuredClone === 'undefined') {
+  globalThis.structuredClone = (value) =>
+    value === undefined ? undefined : JSON.parse(JSON.stringify(value));
+}
+
 const { fetch, Headers, FormData, Request, Response } = require('undici');
 
 Object.defineProperties(globalThis, {
