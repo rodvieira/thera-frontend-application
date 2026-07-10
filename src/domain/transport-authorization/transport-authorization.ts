@@ -1,4 +1,4 @@
-import type { Client } from './types';
+import type { Client } from '../types';
 
 /** Erro de negócio: transporte não autorizado para o cliente. */
 export class TransportNotAuthorizedError extends Error {

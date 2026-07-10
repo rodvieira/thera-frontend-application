@@ -1,4 +1,4 @@
-import { ORDER_STATUSES, type OrderStatus } from './types';
+import { ORDER_STATUSES, type OrderStatus } from '../types';
 
 /**
  * Máquina de estados da Ordem de Venda (linear estrita).
