@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useClients } from '@/features/clients/hooks';
 import { useTransportTypes } from '@/features/transport-types/hooks';
 import { useItems } from '@/features/items/hooks';
+import { DELIVERY_WINDOW_LABELS } from '@/features/scheduling/schema';
 import { useSalesOrder } from '../hooks';
 import {
   statusTransitionRequested,
@@ -105,6 +106,18 @@ export function OrderDetailView({ id }: { id: string }) {
               label="Criada em"
               value={new Date(order.createdAt).toLocaleString('pt-BR')}
             />
+            <div className="col-span-2">
+              <dt className="text-xs text-muted-foreground">Agendamento</dt>
+              <dd className="mt-0.5 text-sm font-medium">
+                {order.schedule
+                  ? `${new Date(
+                      `${order.schedule.date}T00:00:00`,
+                    ).toLocaleDateString('pt-BR')} · ${
+                      DELIVERY_WINDOW_LABELS[order.schedule.window]
+                    } ${order.schedule.confirmed ? '(confirmado)' : '(pendente)'}`
+                  : 'Sem agendamento'}
+              </dd>
+            </div>
           </dl>
 
           <h2 className="mt-6 mb-2 font-display text-sm font-semibold">
