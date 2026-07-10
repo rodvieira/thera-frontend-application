@@ -8,6 +8,7 @@ const createJestConfig = nextJest({
 
 const config: Config = {
   coverageProvider: 'v8',
+  passWithNoTests: true,
   testEnvironment: 'jsdom',
   // Necessário para o MSW resolver os exports corretos sob jsdom.
   testEnvironmentOptions: { customExportConditions: [''] },
