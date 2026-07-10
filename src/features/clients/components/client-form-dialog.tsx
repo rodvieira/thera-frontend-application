@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { TextField } from '@/components/form/text-field';
+import { FieldError } from '@/components/field-error';
 import { cn } from '@/lib/utils';
 import { ApiError } from '@/lib/api-client';
 import { useNotify } from '@/store/use-notify';
@@ -133,9 +134,7 @@ export function ClientFormDialog({ open, onOpenChange, editing }: Props) {
                 );
               })}
             </div>
-            {transportError && (
-              <p className="text-sm text-destructive">{transportError}</p>
-            )}
+            <FieldError message={transportError} />
           </div>
 
           <DialogFooter>

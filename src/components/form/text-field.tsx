@@ -3,6 +3,7 @@
 import { forwardRef, useId } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { FieldError } from '@/components/field-error';
 
 interface TextFieldProps extends React.ComponentProps<'input'> {
   label: string;
@@ -22,7 +23,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       <div className="space-y-2">
         <Label htmlFor={fieldId}>{label}</Label>
         <Input id={fieldId} ref={ref} aria-invalid={!!error} {...props} />
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        <FieldError message={error} />
       </div>
     );
   },

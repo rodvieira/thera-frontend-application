@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { FieldError } from '@/components/field-error';
 import { ApiError } from '@/lib/api-client';
 import { useNotify } from '@/store/use-notify';
 import { useClients } from '@/features/clients/hooks';
@@ -131,11 +132,7 @@ export function OrderFormDialog({ open, onOpenChange }: Props) {
                 </Select>
               )}
             />
-            {form.formState.errors.clientId && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.clientId.message}
-              </p>
-            )}
+            <FieldError message={form.formState.errors.clientId?.message} />
           </div>
 
           <div className="space-y-2">
@@ -171,11 +168,9 @@ export function OrderFormDialog({ open, onOpenChange }: Props) {
             <p className="text-xs text-muted-foreground">
               Apenas transportes autorizados para o cliente são listados.
             </p>
-            {form.formState.errors.transportTypeId && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.transportTypeId.message}
-              </p>
-            )}
+            <FieldError
+              message={form.formState.errors.transportTypeId?.message}
+            />
           </div>
 
           <div className="space-y-2">
@@ -234,11 +229,7 @@ export function OrderFormDialog({ open, onOpenChange }: Props) {
                 ))}
               </ul>
             )}
-            {form.formState.errors.items && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.items.message}
-              </p>
-            )}
+            <FieldError message={form.formState.errors.items?.message} />
           </div>
 
           <DialogFooter>
