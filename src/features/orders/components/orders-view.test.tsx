@@ -102,9 +102,7 @@ describe('OrdersView (integração)', () => {
     );
     await user.click(transportSelect);
     await user.click(await screen.findByRole('option', { name: 'Carreta' }));
-    expect(
-      within(dialog).queryByText('Selecione o transporte'),
-    ).not.toBeInTheDocument();
+    expect(within(dialog).getByText('Carreta')).toBeInTheDocument();
 
     // Cerrado Varejo só autoriza Caminhão — a Carreta escolhida deixa de ser válida.
     await user.click(clientSelect);

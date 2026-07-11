@@ -6,7 +6,51 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { cn } from '@/lib/utils';
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from 'lucide-react';
 
-const Select = SelectPrimitive.Root;
+/**
+ * Percorre a árvore de children à procura de `SelectItem`s para montar o mapa
+ * `value -> label` que o base-ui precisa na raiz do Select para resolver a
+ * label exibida em `SelectValue` (sem isso, ele cai no `value` bruto).
+ */
+function collectItemsFromChildren(
+  node: React.ReactNode,
+  acc: Record<string, string> = {},
+): Record<string, string> {
+  React.Children.forEach(node, (child) => {
+    if (!React.isValidElement(child)) return;
+    if (child.type === SelectItem) {
+      const itemProps = child.props as SelectPrimitive.Item.Props;
+      const value = itemProps.value;
+      const derivedLabel =
+        itemProps.label ?? childrenToLabel(itemProps.children);
+      if (value != null && derivedLabel != null) {
+        acc[String(value)] = derivedLabel;
+      }
+      return;
+    }
+    const childProps = child.props as { children?: React.ReactNode };
+    if (childProps?.children != null) {
+      collectItemsFromChildren(childProps.children, acc);
+    }
+  });
+  return acc;
+}
+
+function Select<Value = string>({
+  items,
+  children,
+  ...props
+}: SelectPrimitive.Root.Props<Value>) {
+  const derivedItems = React.useMemo(
+    () => items ?? collectItemsFromChildren(children),
+    [items, children],
+  );
+
+  return (
+    <SelectPrimitive.Root items={derivedItems} {...props}>
+      {children}
+    </SelectPrimitive.Root>
+  );
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
@@ -111,16 +155,35 @@ function SelectLabel({
   );
 }
 
+/**
+ * Deriva a label textual (usada por `SelectValue` e pela navegação por
+ * digitação) a partir de children simples, sem exigir que cada chamador
+ * informe `label` manualmente (ex.: `{sku} — {name}`).
+ */
+function childrenToLabel(children: React.ReactNode): string | undefined {
+  if (typeof children === 'string') return children;
+  if (typeof children === 'number') return String(children);
+  if (
+    Array.isArray(children) &&
+    children.every((c) => typeof c === 'string' || typeof c === 'number')
+  ) {
+    return children.join('');
+  }
+  return undefined;
+}
+
 function SelectItem({
   className,
   children,
+  label,
   ...props
 }: SelectPrimitive.Item.Props) {
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
+      label={label ?? childrenToLabel(children)}
       className={cn(
-        "relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+        "relative flex w-full cursor-pointer items-center gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
         className,
       )}
       {...props}
