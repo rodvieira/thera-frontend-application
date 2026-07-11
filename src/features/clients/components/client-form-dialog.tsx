@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { TextField } from '@/components/form/text-field';
 import { FieldError } from '@/components/field-error';
-import { cn } from '@/lib/utils';
+import { cn, formatCnpj } from '@/lib/utils';
 import { ApiError } from '@/lib/api-client';
 import { useNotify } from '@/store/use-notify';
 import type { Client } from '@/domain/types';
@@ -105,10 +105,23 @@ export function ClientFormDialog({ open, onOpenChange, editing }: Props) {
             error={form.formState.errors.name?.message}
             {...form.register('name')}
           />
-          <TextField
-            label="Documento (CNPJ)"
-            error={form.formState.errors.document?.message}
-            {...form.register('document')}
+          <Controller
+            control={form.control}
+            name="document"
+            render={({ field }) => (
+              <TextField
+                label="Documento (CNPJ)"
+                inputMode="numeric"
+                placeholder="00.000.000/0000-00"
+                maxLength={18}
+                error={form.formState.errors.document?.message}
+                name={field.name}
+                ref={field.ref}
+                value={field.value}
+                onBlur={field.onBlur}
+                onChange={(e) => field.onChange(formatCnpj(e.target.value))}
+              />
+            )}
           />
 
           <div className="space-y-2">
