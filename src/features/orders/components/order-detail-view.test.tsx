@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test-utils/render';
 import { resetDb } from '@/mocks/data/db';
-import { createSalesOrder } from '@/mocks/data/repository';
+import { createSalesOrder, scheduleDelivery } from '@/mocks/data/repository';
 import { OrderDetailView } from './order-detail-view';
 
 let orderId: string;
@@ -31,6 +31,23 @@ describe('OrderDetailView (integração)', () => {
     // Após a saga (API + invalidação + refetch), o botão passa a oferecer Agendada.
     expect(
       await screen.findByRole('button', { name: /avançar para agendada/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('mostra mensagem quando a Ordem de Venda não existe', async () => {
+    renderWithProviders(<OrderDetailView id="ov-inexistente" />);
+
+    expect(
+      await screen.findByText('Ordem de Venda não encontrada.'),
+    ).toBeInTheDocument();
+  });
+
+  it('exibe a data, janela e status do agendamento quando presente', async () => {
+    scheduleDelivery(orderId, { date: '2099-03-20', window: 'TARDE' });
+    renderWithProviders(<OrderDetailView id={orderId} />);
+
+    expect(
+      await screen.findByText(/20\/03\/2099 · Tarde \(13h–18h\) \(pendente\)/),
     ).toBeInTheDocument();
   });
 });
