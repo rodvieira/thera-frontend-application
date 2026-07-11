@@ -40,7 +40,7 @@ function FilterSelect({
   options: Option[];
 }) {
   return (
-    <div className="space-y-1.5">
+    <div className="flex flex-col gap-1.5">
       <Label className="text-xs text-muted-foreground">{label}</Label>
       <Select
         value={value || ALL}
@@ -91,7 +91,7 @@ export function MonitoringFilters() {
         onChange={(v) => dispatch(setFilter({ transportTypeId: v }))}
         options={transportTypes.map((t) => ({ value: t.id, label: t.name }))}
       />
-      <div className="space-y-1.5">
+      <div className="flex flex-col gap-1.5">
         <Label className="text-xs text-muted-foreground">Data</Label>
         <Input
           type="date"
