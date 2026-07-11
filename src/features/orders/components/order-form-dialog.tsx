@@ -220,7 +220,7 @@ export function OrderFormDialog({ open, onOpenChange }: Props) {
                         type="button"
                         onClick={() => remove(index)}
                         aria-label="Remover item"
-                        className="text-muted-foreground hover:text-destructive"
+                        className="cursor-pointer text-muted-foreground hover:text-destructive"
                       >
                         <Trash2 className="size-4" />
                       </button>

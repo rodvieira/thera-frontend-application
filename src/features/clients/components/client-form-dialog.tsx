@@ -136,7 +136,7 @@ export function ClientFormDialog({ open, onOpenChange, editing }: Props) {
                     onClick={() => toggleTransport(transport.id)}
                     aria-pressed={active}
                     className={cn(
-                      'rounded-full border px-3 py-1 text-sm transition-colors',
+                      'cursor-pointer rounded-full border px-3 py-1 text-sm transition-colors',
                       active
                         ? 'border-foreground bg-foreground text-background'
                         : 'border-border hover:bg-accent',

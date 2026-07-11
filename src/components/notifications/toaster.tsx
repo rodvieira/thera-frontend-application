@@ -41,7 +41,7 @@ function ToastItem({
         type="button"
         onClick={onDismiss}
         aria-label="Fechar notificação"
-        className="text-muted-foreground hover:text-foreground"
+        className="cursor-pointer text-muted-foreground hover:text-foreground"
       >
         <X className="size-4" />
       </button>
